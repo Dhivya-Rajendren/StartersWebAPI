@@ -17,30 +17,61 @@ namespace StartersWebAPI.Controllers
         {
             new Patient(){PatientId=1,FirstName="Priya",City="Pune",Mobile=123,Email="priya@gmail.com"},
             new Patient(){PatientId=2,FirstName="Sam   ",City="Delhi",Mobile=85274796,Email="Sam@gmail.com"},
-            new Patient(){PatientId=3,FirstName="Kamal",City="Chennai",Mobile=975214796,Email="Kamal123@outlook.com"}
+            new Patient(){PatientId=3,FirstName="Kamal",City="Chennai",Mobile=975214796,Email="Kamal123@outlook.com"},
+              new Patient(){PatientId=4,FirstName="Rekha   ",City="Delhi",Mobile=85874796,Email="Rekha@gmail.com"},
+            new Patient(){PatientId=5,FirstName="Raju",City="Chennai",Mobile=775214796,Email="Raju123@outlook.com"}
         };
 
-        public IEnumerable<Patient> Get()
+        public IActionResult Get()
         {
-            return patients;
+            if (false)
+            {
+                return new BadRequestObjectResult("Something Wen Wrong While Processing");
+            }
+            else
+            {
+                return new OkObjectResult(new { PatientId = 123, Name = "Priya" });
+            }
         }
+
 
         [HttpGet("{id}")]
-        public Patient GetPatient(int id)
+        public IActionResult Get(int id)
         {
-            return patients.SingleOrDefault(t => t.PatientId == id);
+            var patient = patients.FirstOrDefault(t => t.PatientId == id);
+            if (patient == null)
+            {
+                return NotFound("No Patients found ");
+            }
+            else
+            {
+                return Ok(patient);
+            }
         }
 
 
 
-        [HttpGet("GetPatientByMobile/{mobile}")]
-   //     [Route("GetPatientByMobile/{mobile}")]
-        public Patient GetPatientByMobile(long mobile)
+        [HttpGet("GetByCity/{city}")]
+        public IActionResult GetByCity(string  city)
         {
-            return patients.SingleOrDefault(t => t.Mobile == mobile);
-
+            var lstPatients = patients.Where(t => t.City == city);
+            if (lstPatients == null)
+            {
+                return NotFound("No Patients found from the city " + city);
+            }
+            else
+            {
+                return Ok(lstPatients);
+            }
         }
 
 
     }
 }
+
+
+
+
+
+
+
